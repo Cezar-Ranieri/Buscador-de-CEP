@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de CEP</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="container">
+        <h1>Buscador de CEP</h1>
+        <input type="text" id="inputcep" placeholder="Insira o CEP que deseja buscar">
+        <p id="erro" class="hide">Insira um CEP válido.</p>
+        <input type="submit" id="submitinput" value="Pesquisar" onclick="buscarCEP()">
+        <div id="containercidade"></div>
+        <a href="index.html" id="pesquisarnovamente" class="hide">Pesquisar novamente</a>
+    </div>
+    <script>
+        async function buscarCEP(params) {
+            const input = document.querySelector("input#inputcep").value
+            const busca = await fetch(`https://cep.awesomeapi.com.br/json/${input}`)
+            if(busca.status == 200){
+                const b = await busca.json()
+                console.log(b)
+                const cidade = document.createElement("p")
+                const endereço = document.createElement("p")
+                const bairro = document.createElement("p")
+                const ddd = document.createElement("p")
+                const estado = document.createElement("p")
+                const cep = document.createElement("p")
+                
+                cidade.innerHTML = `<strong>Cidade</strong>: ${b.city}`
+                endereço.innerHTML = `<strong>Endereço</strong>: ${b.address}`
+                bairro.innerHTML = `<strong>Bairro</strong>: ${b.district}`
+                ddd.innerHTML = `<strong>DDD</strong>: ${b.ddd}`
+                estado.innerHTML = `<strong>Estado</strong>: ${b.state}`
+                cep.innerHTML = `<strong>CEP</strong>: ${b.cep}`
+
+                document.querySelector("div#containercidade").appendChild(endereço)
+                document.querySelector("div#containercidade").appendChild(bairro)
+                document.querySelector("div#containercidade").appendChild(cidade)
+                document.querySelector("div#containercidade").appendChild(ddd)
+                document.querySelector("div#containercidade").appendChild(estado)
+                document.querySelector("div#containercidade").appendChild(cep)
+
+                document.querySelector("input#inputcep").classList.add("hide")
+                document.querySelector("p#erro").classList.add("hide")
+                document.querySelector("input#submitinput").classList.add("hide")
+                document.querySelector("a#pesquisarnovamente").classList.remove("hide")
+            }
+            else {
+                document.querySelector("p#erro").classList.remove("hide")
+            }
+        }
+    </script>
+</body>
+</html>
